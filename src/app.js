@@ -4,6 +4,9 @@ import logger from 'morgan';
 import bodyParser from 'body-parser';
 import routes from './routes';
 
+
+
+
 const app = express();
 app.disable('x-powered-by');
 
@@ -17,6 +20,8 @@ app.use(logger('dev', {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '../public')));
+
+
 
 // Routes
 app.use('/', routes);
@@ -36,5 +41,6 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
       message: err.message
     });
 });
+
 
 export default app;

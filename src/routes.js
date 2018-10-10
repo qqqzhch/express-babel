@@ -1,11 +1,18 @@
 import { Router } from 'express';
+import logger from './log'
 
 const routes = Router();
+
+
+
+
 
 /**
  * GET home page
  */
 routes.get('/', (req, res) => {
+  console.log('logs')
+  logger.info('Hello again distributed logs');
   res.render('index', { title: 'Express Babel' });
 });
 
