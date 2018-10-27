@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import logger from './log'
 
+const walk = require('ignore-walk');
+var readSync = require('read-file-relative').readSync;
+
 const routes = Router();
 
 
@@ -12,9 +15,16 @@ const routes = Router();
  */
 routes.get('/', (req, res) => {
   console.log('logs')
+  
+  console.log(result)
+  
   logger.info('Hello again distributed logs');
   res.render('index', { title: 'Express Babel' });
+
+
+
 });
+
 
 /**
  * GET /list
@@ -26,18 +36,59 @@ routes.get('/', (req, res) => {
  * your use case.
  */
 routes.get('/list', (req, res, next) => {
-  const { title } = req.query;
+  const result = walk.sync({ path: './data' });
 
-  if (title == null || title === '') {
-    // You probably want to set the response HTTP status to 400 Bad Request
-    // or 422 Unprocessable Entity instead of the default 500 of
-    // the global error handler (e.g check out https://github.com/kbariotis/throw.js).
-    // This is just for demo purposes.
-    next(new Error('The "title" parameter is required'));
-    return;
+console.log(result);
+var jsonlist=[]
+result.forEach(function(value,index){
+    console.log(value,index)
+    if(value != '.DS_Store'){
+    var result = readSync("../data/"+value);
+    var list = result.split('\n');
+    var obj={};
+    list.forEach(function(item){
+        var keyvalue = item.split(':');
+        
+        obj[keyvalue[0]]=keyvalue[1];
+        
+    })
+    obj.countName=value;
+    jsonlist.push(obj);
   }
 
-  res.render('index', { title });
+    
+})
+  res.json(jsonlist)
+});
+
+
+
+routes.get('/paylist', (req, res, next) => {
+  const result = walk.sync({ path: './pradata' });
+
+console.log(result);
+var jsonlist=[]
+    result.forEach(function(value,index){
+        console.log(value,index)
+        if(value != '.DS_Store'){
+          
+        
+        var result = readSync("../pradata/"+value);
+        var list = result.split('\n');
+        var obj={};
+        list.forEach(function(item){
+            var keyvalue = item.split(':');
+            
+            obj[keyvalue[0]]=keyvalue[1];
+            
+        })
+        obj.countName=value;
+        jsonlist.push(obj);
+      }
+
+        
+    })
+  res.json(jsonlist)
 });
 
 export default routes;
