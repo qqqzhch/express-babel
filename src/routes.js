@@ -49,7 +49,34 @@ result.forEach(function(value,index){
     list.forEach(function(item){
         var keyvalue = item.split(':');
         
-        obj[keyvalue[0]]=keyvalue[1];
+        obj[keyvalue[0]]='';
+        
+    })
+    obj.countName=value;
+    jsonlist.push(obj);
+  }
+
+    
+})
+  res.json(jsonlist)
+});
+
+
+routes.get('/list2', (req, res, next) => {
+  const result = walk.sync({ path: './data2' });
+
+console.log(result);
+var jsonlist=[]
+result.forEach(function(value,index){
+    console.log(value,index)
+    if(value != '.DS_Store'){
+    var result = readSync("../data2/"+value);
+    var list = result.split('\n');
+    var obj={};
+    list.forEach(function(item){
+        var keyvalue = item.split(':');
+        
+        obj[keyvalue[0]]='';
         
     })
     obj.countName=value;
