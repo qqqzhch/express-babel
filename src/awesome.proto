@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package types;
+
+message Account {
+    
+    bytes   address             = 1;
+    uint64  balance             = 2;
+    uint64  nonce               = 3;
+    bytes   rootDealHash        = 4;   
+    bytes   rootTxHash          = 5; 
+}
+
+message Tx {
+    bytes key         = 1;
+    bytes signature   = 2;
+    TxPayload payload = 3 ;
+}
+
+message TxPayload {
+    uint64 nonce = 1;
+    oneof payload {
+      TxSend            txSend   = 2;
+      
+    }
+}
+
+message TxSend {
+    bytes   id    = 1;
+    TxData  txData =2;
+}
+
+message TxData {
+    bytes   from       = 1 ;
+    bytes   to         = 2 ;
+    uint64  amount     = 3;
+    uint64  gas        = 4;
+    uint64  createTime = 5;
+}
+
