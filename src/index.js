@@ -15,19 +15,34 @@ import fs from 'fs';
 async function demo(){
     // var  result= await translate('苹果','cht')
     // console.log(result)
-
+    var tolang ='en';
     for(var key in endata){    
         for(var key2 in endata[key]){    
-            
-            var  result= await translate(endata[key][key2],'cht'); //'cht'  'zh'
+           if(endata[key][key2]  instanceof Object){
+            for(var key3 in endata[key][key2]){
+              var  result= await translate(endata[key][key2][key3],tolang); //'cht'  'zh'
+              if(result){
+                endata[key][key2][key3]=result;
+              }
+              console.log(endata[key][key2]);
+
+            }
+
+
+           }else{
+            var  result= await translate(endata[key][key2],tolang); //'cht'  'zh'
             if(result){
                 endata[key][key2]=result;
             }
             console.log(endata[key]);
+
+           }
+            
+            
         
         }   
     }
-    fs.writeFileSync('dist.json',JSON.stringify(endata));  
+    fs.writeFileSync('dist.json',JSON.stringify(endata, null, 4));  
     
 }
 demo()
