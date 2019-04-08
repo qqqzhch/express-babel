@@ -8,39 +8,53 @@ import logger from './log'
 import fetch from 'cross-fetch';
 var md5 = require('md5');
 
-import endata from './data/cn';
+import endata from './data/en';
 import fs from 'fs';
 
 
 async function demo(){
     // var  result= await translate('苹果','cht')
     // console.log(result)
-
+    var  result;
     for(var key in endata){    
         for(var key2 in endata[key]){    
-            
-            var  result= await translate(endata[key][key2],'cht'); //'cht'  'zh'
-            if(result){
-                endata[key][key2]=result;
+            if(typeof endata[key][key2] == "string" ){
+              console.log('key2',endata[key][key2])
+              result= await translate(endata[key][key2],'en','zh'); //'cht'  'zh'   'kor'  'en'
+              if(result){
+                  endata[key][key2]=result;
+              }
+            }else{
+              console.log('obj',endata[key][key2])
+              console.log(endata[key][key2])
+              for(var key3 in endata[key][key2]){
+               result= await translate(endata[key][key2][key3],'en','zh');
+               if(result){
+                  endata[key][key2][key3]=result;
+              }
+
+              }
+
             }
-            console.log(endata[key]);
+            
+            
         
         }   
     }
-    fs.writeFileSync('dist.json',JSON.stringify(endata));  
+    fs.writeFileSync('dist.json',JSON.stringify(endata, null, 4));  
     
 }
 demo()
 
  
 
-  async function translate(query,to){
+  async function translate(query,from,to){
     var appid = '20181015000219404';
     var key = 'M_RgFuOPd3EdNbTxHeYZ';
     var salt = (new Date).getTime();
     // var query = 'apple';
     // 多个query可以用\n连接  如 query='apple\norange\nbanana\npear'
-    var from = 'zh'; //'en'
+    
     // var to = 'zh';
     var str1 = appid + query + salt + key;
     console.log('str1',str1)
@@ -73,7 +87,7 @@ demo()
     } catch (err) {
       console.error(err);
     }
-  };
+  }
 
 
 
